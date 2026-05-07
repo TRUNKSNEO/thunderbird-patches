@@ -1,0 +1,27 @@
+# HG changeset patch
+# User welpy-cw <h.w.forms@arcor.de>
+# Date 1778102274 -7200
+# Parent  521e9449d6082b881e605bfd95301564701983aa
+Bug 1913385 - Fix phantom thread twisties during cross-window deletions.
+
+diff --git a/mailnews/base/src/nsMsgDBView.cpp b/mailnews/base/src/nsMsgDBView.cpp
+--- a/mailnews/base/src/nsMsgDBView.cpp
++++ b/mailnews/base/src/nsMsgDBView.cpp
+@@ -5497,8 +5497,17 @@ nsMsgDBView::OnHdrDeleted(nsIMsgDBHdr* a
+     NS_ENSURE_SUCCESS(rv, rv);
+     nsMsgViewIndex threadRootIndex =
+         GetIndexOfFirstDisplayedKeyInThread(thread);
+     if (IsValidIndex(threadRootIndex)) {
++      // Check if the deletion left only one message, in this case strip the
++      // twisty and threading flags so the UI flattens.
++      uint32_t numThreadChildren = 0;
++      thread->GetNumChildren(&numThreadChildren);
++      if (numThreadChildren <= 1) {
++        m_flags[threadRootIndex] &=
++            ~(MSG_VIEW_FLAG_ISTHREAD | nsMsgMessageFlags::Elided |
++              MSG_VIEW_FLAG_HASCHILDREN);
++      }
+       NoteChange(threadRootIndex, 1, nsMsgViewNotificationCode::changed);
+     }
+   }
+ 
