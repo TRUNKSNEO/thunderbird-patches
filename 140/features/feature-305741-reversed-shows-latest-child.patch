@@ -1,0 +1,44 @@
+# HG changeset patch
+# User Betterbird <betterbird@betterbird.eu>
+# Date 1778370045 -7200
+# Parent  a5ad90f368741dc1e8721baca661836ab1d244f2
+Make reverse threading show latest child in collapsed thread.
+
+diff --git a/mailnews/base/src/nsMsgDBView.cpp b/mailnews/base/src/nsMsgDBView.cpp
+--- a/mailnews/base/src/nsMsgDBView.cpp
++++ b/mailnews/base/src/nsMsgDBView.cpp
+@@ -4775,8 +4775,18 @@ nsresult nsMsgDBView::ExpandByIndex(nsMs
+   nsCOMPtr<nsIMsgDBHdr> msgHdr;
+   nsCOMPtr<nsIMsgThread> pThread;
+   nsresult rv = GetThreadContainingIndex(index, getter_AddRefs(pThread));
+   NS_ENSURE_SUCCESS(rv, rv);
++  if (ReversedThreading()) {
++    // Restore damaged thead root.
++    pThread->GetChildKeyAt(0, &m_keys[index]);
++    pThread->GetChildHdrAt(0, getter_AddRefs(msgHdr));
++    uint32_t orgFlags;
++    msgHdr->GetFlags(&orgFlags);
++    flags = orgFlags | (flags & (MSG_VIEW_FLAG_ISTHREAD | MSG_VIEW_FLAG_HASCHILDREN));
++    m_flags[index] = flags;
++    m_levels[index] = 0;
++  }
+   if (m_viewFlags & nsMsgViewFlagsType::kUnreadOnly) {
+     rv = ListUnreadIdsInThread(pThread, index, &numExpanded);
+   } else {
+     rv = ListIdsInThread(pThread, index, &numExpanded);
+@@ -4858,8 +4868,15 @@ nsresult nsMsgDBView::CollapseByIndex(ns
+       NS_ERROR("trying to remove too many rows");
+       numRemoved = index;
+       if (numRemoved <= 0) return NS_MSG_MESSAGE_NOT_FOUND;
+     }
++    // Make the root display the most recent child.
++    m_keys[index] = m_keys[index - numRemoved];
++    m_flags[index] = m_flags[index - numRemoved];
++    // Carry over the relevant flags from the root.
++    m_flags[index] |= nsMsgMessageFlags::Elided;
++    m_flags[index] |= (flags & (MSG_VIEW_FLAG_ISTHREAD | MSG_VIEW_FLAG_HASCHILDREN));
++
+     NoteChange(index, 1, nsMsgViewNotificationCode::changed);
+     RemoveRows(index - numRemoved, numRemoved);
+     NoteChange(index - numRemoved, rowDelta,
+                nsMsgViewNotificationCode::insertOrDelete);
