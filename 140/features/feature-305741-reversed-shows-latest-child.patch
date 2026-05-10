@@ -1,13 +1,13 @@
 # HG changeset patch
 # User Betterbird <betterbird@betterbird.eu>
-# Date 1778370045 -7200
-# Parent  a5ad90f368741dc1e8721baca661836ab1d244f2
-Make reverse threading show latest child in collapsed thread.
+# Date 1778443990 -7200
+# Parent  092ed407578c38d9a9d64722fa3988293563468d
+Make reversed threading show most recent child in collapsed thread root.
 
 diff --git a/mailnews/base/src/nsMsgDBView.cpp b/mailnews/base/src/nsMsgDBView.cpp
 --- a/mailnews/base/src/nsMsgDBView.cpp
 +++ b/mailnews/base/src/nsMsgDBView.cpp
-@@ -4775,8 +4775,18 @@ nsresult nsMsgDBView::ExpandByIndex(nsMs
+@@ -4775,8 +4775,19 @@ nsresult nsMsgDBView::ExpandByIndex(nsMs
    nsCOMPtr<nsIMsgDBHdr> msgHdr;
    nsCOMPtr<nsIMsgThread> pThread;
    nsresult rv = GetThreadContainingIndex(index, getter_AddRefs(pThread));
@@ -18,7 +18,8 @@ diff --git a/mailnews/base/src/nsMsgDBView.cpp b/mailnews/base/src/nsMsgDBView.c
 +    pThread->GetChildHdrAt(0, getter_AddRefs(msgHdr));
 +    uint32_t orgFlags;
 +    msgHdr->GetFlags(&orgFlags);
-+    flags = orgFlags | (flags & (MSG_VIEW_FLAG_ISTHREAD | MSG_VIEW_FLAG_HASCHILDREN));
++    flags = orgFlags |
++            (flags & (MSG_VIEW_FLAG_ISTHREAD | MSG_VIEW_FLAG_HASCHILDREN));
 +    m_flags[index] = flags;
 +    m_levels[index] = 0;
 +  }
@@ -26,19 +27,92 @@ diff --git a/mailnews/base/src/nsMsgDBView.cpp b/mailnews/base/src/nsMsgDBView.c
      rv = ListUnreadIdsInThread(pThread, index, &numExpanded);
    } else {
      rv = ListIdsInThread(pThread, index, &numExpanded);
-@@ -4858,8 +4868,15 @@ nsresult nsMsgDBView::CollapseByIndex(ns
+@@ -4858,8 +4869,46 @@ nsresult nsMsgDBView::CollapseByIndex(ns
        NS_ERROR("trying to remove too many rows");
        numRemoved = index;
        if (numRemoved <= 0) return NS_MSG_MESSAGE_NOT_FOUND;
      }
++
 +    // Make the root display the most recent child.
-+    m_keys[index] = m_keys[index - numRemoved];
-+    m_flags[index] = m_flags[index - numRemoved];
++    nsCOMPtr<nsIMsgThread> pThread;
++    nsresult rv = GetThreadContainingIndex(index, getter_AddRefs(pThread));
++    NS_ENSURE_SUCCESS(rv, rv);
++    uint32_t newestDate = 0;
++    uint32_t newestIndex = index - numRemoved;
++    uint32_t numChildren;
++    nsMsgKey newestKey = nsMsgKey_None;
++
++    pThread->GetNumChildren(&numChildren);
++    for (uint32_t childIndex = 0; childIndex < numChildren; childIndex++) {
++      nsCOMPtr<nsIMsgDBHdr> child;
++      rv = pThread->GetChildHdrAt(childIndex, getter_AddRefs(child));
++      if (NS_SUCCEEDED(rv)) {
++        uint32_t msgDate;
++        child->GetDateInSeconds(&msgDate);
++        if (msgDate > newestDate) {
++          newestDate = msgDate;
++          child->GetMessageKey(&newestKey);
++        }
++      }
++    }
++    if (newestKey != nsMsgKey_None) {
++      // Find index. Start looking at the last child of the thread
++      // which is at the top in reversed threading. Likely it's already the
++      // one we want.
++      newestIndex = m_keys.IndexOf(newestKey, newestIndex);
++    }
++
++    m_keys[index] = m_keys[newestIndex];
++    m_flags[index] = m_flags[newestIndex];
++
 +    // Carry over the relevant flags from the root.
 +    m_flags[index] |= nsMsgMessageFlags::Elided;
-+    m_flags[index] |= (flags & (MSG_VIEW_FLAG_ISTHREAD | MSG_VIEW_FLAG_HASCHILDREN));
++    m_flags[index] |=
++        (flags & (MSG_VIEW_FLAG_ISTHREAD | MSG_VIEW_FLAG_HASCHILDREN));
 +
      NoteChange(index, 1, nsMsgViewNotificationCode::changed);
      RemoveRows(index - numRemoved, numRemoved);
      NoteChange(index - numRemoved, rowDelta,
                 nsMsgViewNotificationCode::insertOrDelete);
+diff --git a/mailnews/base/src/nsMsgThreadedDBView.cpp b/mailnews/base/src/nsMsgThreadedDBView.cpp
+--- a/mailnews/base/src/nsMsgThreadedDBView.cpp
++++ b/mailnews/base/src/nsMsgThreadedDBView.cpp
+@@ -177,8 +177,38 @@ nsresult nsMsgThreadedDBView::InitThread
+     if ((!(m_viewFlags & nsMsgViewFlagsType::kThreadedDisplay) ||
+          m_viewFlags & nsMsgViewFlagsType::kExpandAll) &&
+         msgFlags & nsMsgMessageFlags::Elided) {
+       ExpandByIndex(m_keys.Length() - 1, nullptr);
++    } else if (ReversedThreading()) {
++      // We need to replace the unexpanded root with the most recent child.
++      // Mostly copied from nsMsgDBView::CollapseByIndex().
++      uint32_t newestDate = 0;
++      nsMsgKey newestKey = nsMsgKey_None;
++      nsCOMPtr<nsIMsgDBHdr> newestChild;
++
++      for (uint32_t childIndex = 0; childIndex < numChildren; childIndex++) {
++        nsCOMPtr<nsIMsgDBHdr> child;
++        rv = threadHdr->GetChildHdrAt(childIndex, getter_AddRefs(child));
++        if (NS_SUCCEEDED(rv)) {
++          uint32_t msgDate;
++          child->GetDateInSeconds(&msgDate);
++          if (msgDate > newestDate) {
++            newestDate = msgDate;
++            child->GetMessageKey(&newestKey);
++            newestChild = child;
++          }
++        }
++      }
++      if (newestKey != nsMsgKey_None) {
++        uint32_t lastIndex = m_keys.Length() - 1;
++        m_keys[lastIndex] = newestKey;
++        newestChild->GetFlags(&m_flags[lastIndex]);
++
++        // Carry over the relevant flags from the root.
++        m_flags[lastIndex] |= nsMsgMessageFlags::Elided;
++        m_flags[lastIndex] |=
++            (msgFlags & (MSG_VIEW_FLAG_ISTHREAD | MSG_VIEW_FLAG_HASCHILDREN));
++      }
+     }
+ 
+     count++;
+   }
