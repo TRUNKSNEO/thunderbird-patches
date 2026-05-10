@@ -1,6 +1,6 @@
 # HG changeset patch
 # User Betterbird <betterbird@betterbird.eu>
-# Date 1764534771 -3600
+# Date 1778443891 -7200
 # Parent  32055be6777d6d697194c557b7c3dbafbbd9ac0d
 Feature: Reversed threading (bug 305741).
 
@@ -1237,9 +1237,9 @@ diff --git a/mailnews/base/src/nsMsgThreadedDBView.cpp b/mailnews/base/src/nsMsg
 +  if (ReversedThreading()) {
 +    // Correct `threadIndex`, since all the children above
 +    // are no longer displayed.
-+    // Since the new header is already counted in the thread, but not displayed yet,
-+    // we need to subtract it. Also, collapsing a thread with N children, removes
-+    // N-1 rows from the view.
++    // Since the new header is already counted in the thread, but not displayed
++    // yet, we need to subtract it. Also, collapsing a thread with N children,
++    // removes N-1 rows from the view.
 +    uint32_t numChildren;
 +    threadHdr->GetNumChildren(&numChildren);
 +    if (numChildren < 2) {
@@ -1256,7 +1256,7 @@ diff --git a/mailnews/base/src/nsMsgThreadedDBView.cpp b/mailnews/base/src/nsMsg
  
    // Handle root changes or chronological shifts directly
    nsMsgViewIndex newIndex = nsMsgViewIndex_None;
-@@ -721,10 +744,19 @@ nsresult nsMsgThreadedDBView::RemoveByIn
+@@ -721,10 +744,20 @@ nsresult nsMsgThreadedDBView::RemoveByIn
      });
  
      // Scrub stale children natively.
@@ -1264,10 +1264,11 @@ diff --git a/mailnews/base/src/nsMsgThreadedDBView.cpp b/mailnews/base/src/nsMsg
 -    nsresult rv = nsMsgDBView::RemoveByIndex(index);
 -    NS_ENSURE_SUCCESS(rv, rv);
 +    if (ReversedThreading()) {
-+      // When not subtract `numThreadChildren - 1` here, since collapsing a thread
-+      // of N children (incl. the root) removes only N-1 rows from the view?
-+      // Apperently the DB deletion has already taken place, so `numThreadChildren`
-+      // has already been reduced. Gotta love those unspoken premises.
++      // When not subtract `numThreadChildren - 1` here, since collapsing a
++      // thread of N children (incl. the root) removes only N-1 rows from the
++      // view? Apparently the DB deletion has already taken place, so
++      // `numThreadChildren` has already been reduced. Gotta love those unspoken
++      // premises.
 +      nsresult rv = nsMsgDBView::RemoveByIndex(index - numThreadChildren);
 +      NS_ENSURE_SUCCESS(rv, rv);
 +    } else {
@@ -1278,7 +1279,7 @@ diff --git a/mailnews/base/src/nsMsgThreadedDBView.cpp b/mailnews/base/src/nsMsg
      // Add newly promoted root and let Mork natively calculate the layout and
      // indentation.
      nsCOMPtr<nsIMsgDBHdr> newRootHdr;
-@@ -773,16 +805,28 @@ nsresult nsMsgThreadedDBView::RemoveByIn
+@@ -773,16 +806,30 @@ nsresult nsMsgThreadedDBView::RemoveByIn
      NS_ENSURE_SUCCESS(rv, rv);
  
      // If the deleted child had children of its own, the DB reparents them to
@@ -1299,7 +1300,8 @@ diff --git a/mailnews/base/src/nsMsgThreadedDBView.cpp b/mailnews/base/src/nsMsg
 +      }
 +      int32_t numChildrenShifted = index - 1 - i;
 +      if (numChildrenShifted > 0) {
-+        NoteChange(index - 1, numChildrenShifted, nsMsgViewNotificationCode::changed);
++        NoteChange(index - 1, numChildrenShifted,
++                   nsMsgViewNotificationCode::changed);
 +      }
 +    } else {
 +      nsMsgViewIndex i = index;
@@ -1309,7 +1311,8 @@ diff --git a/mailnews/base/src/nsMsgThreadedDBView.cpp b/mailnews/base/src/nsMsg
 +      }
 +      int32_t numChildrenShifted = i - index;
 +      if (numChildrenShifted > 0) {
-+        NoteChange(index, numChildrenShifted, nsMsgViewNotificationCode::changed);
++        NoteChange(index, numChildrenShifted,
++                   nsMsgViewNotificationCode::changed);
 +      }
      }
      return NS_OK;
