@@ -373,4 +373,4 @@ features/feature-923043-headers-punycode-ace.patch
 bugs/518629-trashcan-icon-imap.patch ## in TB 152
 bugs/1953623-fix-notifications-for-junk.patch ## in TB 152
 bugs/NNN34-reset-sort-order-for-all-folders.patch
-features/feature-305741-reversed-shows-latest-child.patch
+features/feature-604033-collapsed-thread-shows-most-recent.patch
