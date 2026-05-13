@@ -1,0 +1,20 @@
+# HG changeset patch
+# User Betterbird <betterbird@betterbird.eu>
+# Parent  9913be4f3e525facc0707629cdaa036e8a019d7c
+
+diff --git a/mail/installer/windows/nsis/shared.nsh b/mail/installer/windows/nsis/shared.nsh
+--- a/mail/installer/windows/nsis/shared.nsh
++++ b/mail/installer/windows/nsis/shared.nsh
+@@ -980,10 +980,10 @@
+ 
+   ; The shim for 1.5.0.10 writes out a set of bogus keys which we need to
+   ; cleanup. Intentionally hard coding Mozilla Thunderbird here
+   ; as this is the string used by the shim.
+-  DeleteRegKey HKLM "$0\Mozilla Betterbird.Url.mailto"
+-  DeleteRegValue HKLM "Software\RegisteredApplications" "Mozilla Thunderbird"
++  DeleteRegKey HKLM "$0\Betterbird.Url.mailto"
++  DeleteRegValue HKLM "Software\RegisteredApplications" "Betterbird"
+ 
+   ; Remove the app compatibility registry key
+   StrCpy $0 "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
+   DeleteRegValue HKLM "$0" "$INSTDIR\${FileMainEXE}"
