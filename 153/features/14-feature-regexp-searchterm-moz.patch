@@ -1,0 +1,57 @@
+# HG changeset patch
+# User Betterbird <betterbird@betterbird.eu>
+# Date 1778702188 -7200
+# Parent  773bd5a8d4f8b1ddbd2cd23f0d55a1d13d29c783
+Feature: RegExp in search terms: Build ICU's regex.
+
+diff --git a/config/external/icu/defs.mozbuild b/config/external/icu/defs.mozbuild
+--- a/config/external/icu/defs.mozbuild
++++ b/config/external/icu/defs.mozbuild
+@@ -12,9 +12,9 @@ DEFINES["U_HIDE_OBSOLETE_UTF_OLD_H"] = 1
+ 
+ # Remove chunks of the library that we don't need or use ICU4X and encoding_rs for.
+ DEFINES["UCONFIG_NO_LEGACY_CONVERSION"] = True
+ DEFINES["UCONFIG_NO_TRANSLITERATION"] = True
+-DEFINES["UCONFIG_NO_REGULAR_EXPRESSIONS"] = True
++# DEFINES["UCONFIG_NO_REGULAR_EXPRESSIONS"] = True
+ DEFINES["UCONFIG_NO_BREAK_ITERATION"] = True
+ DEFINES["UCONFIG_NO_IDNA"] = True
+ DEFINES["UCONFIG_NO_MF2"] = True
+ DEFINES["UCONFIG_NO_NORMALIZATION"] = True
+diff --git a/config/external/icu/i18n/sources.mozbuild b/config/external/icu/i18n/sources.mozbuild
+--- a/config/external/icu/i18n/sources.mozbuild
++++ b/config/external/icu/i18n/sources.mozbuild
+@@ -133,11 +133,17 @@ sources = [
+     "/intl/icu/source/i18n/plurrule.cpp",
+     "/intl/icu/source/i18n/quantityformatter.cpp",
+     "/intl/icu/source/i18n/rbnf.cpp",
+     "/intl/icu/source/i18n/rbtz.cpp",
++    "/intl/icu/source/i18n/regexcmp.cpp",
++    "/intl/icu/source/i18n/regeximp.cpp",
++    "/intl/icu/source/i18n/regexst.cpp",
++    "/intl/icu/source/i18n/regextxt.cpp",
+     "/intl/icu/source/i18n/region.cpp",
+     "/intl/icu/source/i18n/reldatefmt.cpp",
+     "/intl/icu/source/i18n/reldtfmt.cpp",
++    "/intl/icu/source/i18n/rematch.cpp",
++    "/intl/icu/source/i18n/repattrn.cpp",
+     "/intl/icu/source/i18n/rulebasedcollator.cpp",
+     "/intl/icu/source/i18n/scriptset.cpp",
+     "/intl/icu/source/i18n/search.cpp",
+     "/intl/icu/source/i18n/selfmt.cpp",
+@@ -227,15 +233,9 @@ other_sources = [
+     "/intl/icu/source/i18n/rbt_data.cpp",
+     "/intl/icu/source/i18n/rbt_pars.cpp",
+     "/intl/icu/source/i18n/rbt_rule.cpp",
+     "/intl/icu/source/i18n/rbt_set.cpp",
+-    "/intl/icu/source/i18n/regexcmp.cpp",
+-    "/intl/icu/source/i18n/regeximp.cpp",
+-    "/intl/icu/source/i18n/regexst.cpp",
+-    "/intl/icu/source/i18n/regextxt.cpp",
+-    "/intl/icu/source/i18n/rematch.cpp",
+     "/intl/icu/source/i18n/remtrans.cpp",
+-    "/intl/icu/source/i18n/repattrn.cpp",
+     "/intl/icu/source/i18n/scientificnumberformatter.cpp",
+     "/intl/icu/source/i18n/strmatch.cpp",
+     "/intl/icu/source/i18n/strrepl.cpp",
+     "/intl/icu/source/i18n/titletrn.cpp",

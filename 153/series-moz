@@ -1,0 +1,24 @@
+branding/02-branding-moz.patch
+branding/05-branding-moz.patch
+branding/05b-branding-localised-installer-moz.patch
+branding/08-branding-moz.patch
+branding/09c-branding-percent-app-moz.patch
+misc/04-misc-missing-fluent-strings-moz.patch
+misc/08-misc-disable-TB-langpacks-moz.patch
+misc/08b-misc-disable-BB-langpacks-moz.patch
+misc/03a-misc-block-rogue-addons-moz.patch
+features/feature-359303-dont-replace-NBSP-moz.patch ### Fixed via bug 1769534 but later backed out
+features/16-feature-limit-plaintext-URL-ScanTXT-moz.patch
+bugs/1740496-persist-saved-files-moz.patch
+bugs/1863798-toast-notification-pass-pid-moz.patch ## Still needed?
+features/14-feature-regexp-searchterm-moz.patch
+misc/18-misc-no-bogus-add-on-date-moz.patch
+bugs/NNN9-reduce-console-noise-moz.patch
+features/feature-506064-match-diacritics-moz.patch
+bugs/backout-bug-1873959-buildid-moz.patch
+bugs/216235-skip-moz-cite-prefix-in-spell-check-moz.patch
+bugs/1872790-send-custom-event-on-minimise-moz.patch
+# bugs/532712-insert-NBSP-moz.patch
+# bugs/532712-insert-NBSP-blink-moz.patch
+bugs/1566458-quit-if-no-master-password-moz.patch
+branding/08a-branding-certum-cert-moz.patch

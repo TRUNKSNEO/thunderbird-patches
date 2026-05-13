@@ -1,0 +1,39 @@
+# HG changeset patch
+# User Betterbird <betterbird@betterbird.eu>
+# Date 1778702073 -7200
+# Parent  938a6f60c0be2164a909c8d427a5a00b55aefd0b
+Bug 1863798 - Pass PID from notification handler to notification callback so `AllowSetForegroundWindow()` can be called even without notification server.
+
+diff --git a/toolkit/mozapps/notificationserver/NotificationCallback.cpp b/toolkit/mozapps/notificationserver/NotificationCallback.cpp
+--- a/toolkit/mozapps/notificationserver/NotificationCallback.cpp
++++ b/toolkit/mozapps/notificationserver/NotificationCallback.cpp
+@@ -114,8 +114,12 @@ mozilla::Maybe<ToastArgs> NotificationCa
+   for (std::wstring key, value;
+        std::getline(args, key) && std::getline(args, value);) {
+     if (key == kLaunchArgProgram) {
+       hasMozillaArgs = true;
++    } else if (key == L"processID") {
++      DWORD pid;
++      swscanf(value.c_str(), L"%08lx", &pid);
++      AllowSetForegroundWindow(pid);
+     } else if (key == kLaunchArgProfile) {
+       parsedArgs.profile = value;
+     } else if (key == kLaunchArgTag) {
+       parsedArgs.windowsTag = value;
+diff --git a/widget/windows/ToastNotificationHandler.cpp b/widget/windows/ToastNotificationHandler.cpp
+--- a/widget/windows/ToastNotificationHandler.cpp
++++ b/widget/windows/ToastNotificationHandler.cpp
+@@ -194,8 +194,13 @@ Result<nsString, nsresult> ToastNotifica
+     // The COM notification server will look for this specific key and value to
+     // trigger the behavior mentioned above, of exiting and allowing Windows
+     // 8-style callbacks to run.
+     launchArg += u"skipNotificationServer\ntrue"_ns;
++    // Include PID.
++    DWORD pid = GetCurrentProcessId();
++    char pidString[9];
++    sprintf(pidString, "%08lx", pid);
++    launchArg += u"processID\n"_ns + NS_ConvertUTF8toUTF16(nsDependentCString(pidString));
+     return launchArg;
+   }
+ 
+   // `program` argument.
