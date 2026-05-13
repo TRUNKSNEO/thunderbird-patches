@@ -1,0 +1,431 @@
+# HG changeset patch
+# User Betterbird <betterbird@betterbird.eu>
+# Date 1778708827 -7200
+# Parent  98d4f7ba77ab499ae22f9b6f01ffc04b00391b7e
+Branding: Replace Thunderbird.Url.XXX with Betterbird.Url.XXX.
+
+diff --git a/mail/components/MessengerContentHandler.sys.mjs b/mail/components/MessengerContentHandler.sys.mjs
+--- a/mail/components/MessengerContentHandler.sys.mjs
++++ b/mail/components/MessengerContentHandler.sys.mjs
+@@ -795,9 +795,9 @@ export class MessengerContentHandler {
+     if (actionFlagIdx && osintFlagIdx > -1) {
+       const param = cmdLine.getArgument(actionFlagIdx + 1);
+       if (
+         cmdLine.length != actionFlagIdx + 2 ||
+-        /thunderbird.url.(mailto|news):/.test(param)
++        /betterbird.url.(mailto|news):/.test(param)
+       ) {
+         throw Components.Exception("Bad command line args.", Cr.NS_ERROR_ABORT);
+       }
+     }
+diff --git a/mail/components/shell/nsWindowsShellService.cpp b/mail/components/shell/nsWindowsShellService.cpp
+--- a/mail/components/shell/nsWindowsShellService.cpp
++++ b/mail/components/shell/nsWindowsShellService.cpp
+@@ -62,19 +62,19 @@ typedef enum {
+ } SettingFlags;
+ 
+ // APP_REG_NAME_MAIL and APP_REG_NAME_NEWS should be kept in synch with
+ // AppRegNameMail and AppRegNameNews in the installer file: defines.nsi.in
+-#define APP_REG_NAME_MAIL L"Thunderbird"
+-#define APP_REG_NAME_NEWS L"Thunderbird (News)"
+-#define APP_REG_NAME_CALENDAR L"Thunderbird (Calendar)"
+-#define CLS_EML "ThunderbirdEML"
+-#define CLS_MAILTOURL "Thunderbird.Url.mailto"
+-#define CLS_MIDURL "Thunderbird.Url.mid"
+-#define CLS_NEWSURL "Thunderbird.Url.news"
+-#define CLS_FEEDURL "Thunderbird.Url.feed"
+-#define CLS_WEBCALURL "Thunderbird.Url.webcal"
+-#define CLS_NET_THUNDERBIRDURL "Thunderbird.Url.net.thunderbird"
+-#define CLS_ICS "ThunderbirdICS"
++#define APP_REG_NAME_MAIL L"Betterbird"
++#define APP_REG_NAME_NEWS L"Betterbird (News)"
++#define APP_REG_NAME_CALENDAR L"Betterbird (Calendar)"
++#define CLS_EML "BetterbirdEML"
++#define CLS_MAILTOURL "Betterbird.Url.mailto"
++#define CLS_MIDURL "Betterbird.Url.mid"
++#define CLS_NEWSURL "Betterbird.Url.news"
++#define CLS_FEEDURL "Betterbird.Url.feed"
++#define CLS_WEBCALURL "Betterbird.Url.webcal"
++#define CLS_NET_THUNDERBIRDURL "Betterbird.Url.net.thunderbird"
++#define CLS_ICS "BetterbirdICS"
+ #define SOP "\\shell\\open\\command"
+ #define VAL_OPEN "\"%APPPATH%\" \"%1\""
+ #define VAL_MAIL_OPEN "\"%APPPATH%\" -osint -mail \"%1\""
+ #define VAL_COMPOSE_OPEN "\"%APPPATH%\" -osint -compose \"%1\""
+diff --git a/mail/installer/windows/nsis/installer.nsi b/mail/installer/windows/nsis/installer.nsi
+--- a/mail/installer/windows/nsis/installer.nsi
++++ b/mail/installer/windows/nsis/installer.nsi
+@@ -269,9 +269,9 @@ Section "-InstallStartCleanup"
+   ; setup the application model id registration value
+   ${InitHashAppModelId} "$INSTDIR" "Software\Mozilla\${AppName}\TaskBarIDs"
+ 
+   ; Clean up old maintenance service logs
+-  ${CleanMaintenanceServiceLogs} "Thunderbird"
++  ${CleanMaintenanceServiceLogs} "Betterbird"
+ 
+   ${RemovePrecompleteEntries} "false"
+ 
+   ${If} ${FileExists} "$INSTDIR\defaults\pref\channel-prefs.js"
+@@ -421,34 +421,34 @@ Section "-Application" APP_IDX
+   ; Uninstall keys can only exist under HKLM on some versions of windows. Since
+   ; it doesn't cause problems always add them.
+   ${SetUninstallKeys}
+ 
+-  ; On install always add the ThunderbirdEML, Thunderbird.Url.mailto,
+-  ; Thunderbird.Url.mid, Thunderbird.Url.news, Thunderbird.webcal,
+-  ; ThunderbirdICS, and Thunderbird.Url.net.thunderbird keys.
++  ; On install always add the BetterbirdEML, Betterbird.Url.mailto,
++  ; Betterbird.Url.mid, Betterbird.Url.news, Betterbird.webcal,
++  ; BetterbirdICS, and Betterbird.Url.net.thunderbird keys.
+   ${GetLongPath} "$INSTDIR\${FileMainEXE}" $8
+   StrCpy $0 "SOFTWARE\Classes"
+   StrCpy $1 "$\"$8$\" $\"%1$\""
+   StrCpy $2 "$\"$8$\" -osint -compose $\"%1$\""
+   StrCpy $3 "$\"$8$\" -osint -mail $\"%1$\""
+ 
+-  ; An empty string is used for the 5th param because ThunderbirdEML is not a
++  ; An empty string is used for the 5th param because BetterbirdEML is not a
+   ; protocol handler
+-  ${AddHandlerValues} "$0\ThunderbirdEML"  "$1" "$8,0" \
++  ${AddHandlerValues} "$0\BetterbirdEML"  "$1" "$8,0" \
+                       "${AppRegNameMail} Document" "" ""
+-  ${AddHandlerValues} "$0\Thunderbird.Url.mailto"  "$2" "$8,0" \
++  ${AddHandlerValues} "$0\Betterbird.Url.mailto"  "$2" "$8,0" \
+                       "${AppRegNameMail} URL" "delete" ""
+-  ${AddHandlerValues} "$0\Thunderbird.Url.news" "$3" "$8,0" \
++  ${AddHandlerValues} "$0\Betterbird.Url.news" "$3" "$8,0" \
+                       "${AppRegNameNews} URL" "delete" ""
+-  ${AddHandlerValues} "$0\Thunderbird.Url.mid"  "$1" "$8,0" \
++  ${AddHandlerValues} "$0\Betterbird.Url.mid"  "$1" "$8,0" \
+                       "${AppRegNameMail} URL" "delete" ""
+-  ${AddHandlerValues} "$0\Thunderbird.Url.net.thunderbird"  "$1" "$8,0" \
++  ${AddHandlerValues} "$0\Betterbird.Url.net.thunderbird"  "$1" "$8,0" \
+                       "${AppRegNameMail} URL" "delete" ""
+-  ${AddHandlerValues} "$0\Thunderbird.Url.webcal"  "$1" "$8,0" \
++  ${AddHandlerValues} "$0\Betterbird.Url.webcal"  "$1" "$8,0" \
+                       "${AppRegNameCalendar} URL" "delete" ""
+-  ; An empty string is used for the 5th param because ThunderbirdICS is not a
++  ; An empty string is used for the 5th param because BetterbirdICS is not a
+   ; protocol handler
+-  ${AddHandlerValues} "$0\ThunderbirdICS" "$1" "$8,0" \
++  ${AddHandlerValues} "$0\BetterbirdICS" "$1" "$8,0" \
+                       "${AppRegNameCalendar} Document" "" ""
+ 
+   ; The keys below can be set in HKCU if needed.
+   ${If} $RegHive == "HKLM"
+diff --git a/mail/installer/windows/nsis/shared.nsh b/mail/installer/windows/nsis/shared.nsh
+--- a/mail/installer/windows/nsis/shared.nsh
++++ b/mail/installer/windows/nsis/shared.nsh
+@@ -203,21 +203,21 @@
+   StrCpy $0 "SOFTWARE\Classes"
+   StrCpy $1 "$\"$8$\" $\"%1$\""
+   StrCpy $2 "$\"$8$\" -osint -compose $\"%1$\""
+ 
+-  ; An empty string is used for the 5th param because ThunderbirdEML is not a
++  ; An empty string is used for the 5th param because BetterbirdEML is not a
+   ; protocol handler
+-  ${AddHandlerValues} "$0\ThunderbirdEML"  "$1" "$8,0" \
++  ${AddHandlerValues} "$0\BetterbirdEML"  "$1" "$8,0" \
+                       "${AppRegNameMail} Document" "" ""
+-  ${AddHandlerValues} "$0\Thunderbird.Url.mailto"  "$2" "$8,0" "${AppRegNameMail} URL" "delete" ""
++  ${AddHandlerValues} "$0\Betterbird.Url.mailto"  "$2" "$8,0" "${AppRegNameMail} URL" "delete" ""
+   ${AddHandlerValues} "$0\mailto" "$2" "$8,0" "${AppRegNameMail} URL" "true" ""
+-  ${AddHandlerValues} "$0\Thunderbird.Url.mid"  "$1" "$8,0" "${AppRegNameMail} URL" "delete" ""
++  ${AddHandlerValues} "$0\Betterbird.Url.mid"  "$1" "$8,0" "${AppRegNameMail} URL" "delete" ""
+   ${AddHandlerValues} "$0\mid" "$1" "$8,0" "${AppRegNameMail} URL" "true" ""
+ 
+-  ; Associate the file handlers with ThunderbirdEML
++  ; Associate the file handlers with BetterbirdEML
+   ReadRegStr $6 SHCTX ".eml" ""
+-  ${If} "$6" != "ThunderbirdEML"
+-    WriteRegStr SHCTX "$0\.eml"   "" "ThunderbirdEML"
++  ${If} "$6" != "BetterbirdEML"
++    WriteRegStr SHCTX "$0\.eml"   "" "BetterbirdEML"
+   ${EndIf}
+ !macroend
+ !define SetHandlersMail "!insertmacro SetHandlersMail"
+ 
+@@ -225,9 +225,9 @@
+   ${GetLongPath} "$INSTDIR\${FileMainEXE}" $8
+   StrCpy $0 "SOFTWARE\Classes"
+   StrCpy $1 "$\"$8$\" -osint -mail $\"%1$\""
+ 
+-  ${AddHandlerValues} "$0\Thunderbird.Url.news" "$1" "$8,0" \
++  ${AddHandlerValues} "$0\Betterbird.Url.news" "$1" "$8,0" \
+                       "${AppRegNameNews} URL" "delete" ""
+   ${AddHandlerValues} "$0\news"   "$1" "$8,0" "${AppRegNameNews} URL" "true" ""
+   ${AddHandlerValues} "$0\nntp"   "$1" "$8,0" "${AppRegNameNews} URL" "true" ""
+   ${AddHandlerValues} "$0\snews"  "$1" "$8,0" "${AppRegNameNews} URL" "true" ""
+@@ -239,20 +239,20 @@
+ 
+   StrCpy $0 "SOFTWARE\Classes"
+   StrCpy $1 "$\"$8$\" $\"%1$\""
+ 
+-  ${AddHandlerValues} "$0\Thunderbird.Url.webcal"  "$1" "$8,0" "${AppRegNameCalendar} URL" "delete" ""
++  ${AddHandlerValues} "$0\Betterbird.Url.webcal"  "$1" "$8,0" "${AppRegNameCalendar} URL" "delete" ""
+   ${AddHandlerValues} "$0\webcal" "$1" "$8,0" "${AppRegNameCalendar} URL" "true" ""
+   ${AddHandlerValues} "$0\webcals" "$1" "$8,0" "${AppRegNameCalendar} URL" "true" ""
+-  ; An empty string is used for the 5th param because ThunderbirdICS is not a
++  ; An empty string is used for the 5th param because BetterbirdICS is not a
+   ; protocol handler
+-  ${AddHandlerValues} "$0\ThunderbirdICS" "$1" "$8,0" \
++  ${AddHandlerValues} "$0\BetterbirdICS" "$1" "$8,0" \
+                       "${AppRegNameCalendar} Document" "" ""
+ 
+-  ;; Associate the file handlers with ThunderbirdICS
++  ;; Associate the file handlers with BetterbirdICS
+   ReadRegStr $6 SHCTX ".ics" ""
+-  ${If} "$6" != "ThunderbirdICS"
+-    WriteRegStr SHCTX "$0\.ics"   "" "ThunderbirdICS"
++  ${If} "$6" != "BetterbirdICS"
++    WriteRegStr SHCTX "$0\.ics"   "" "BetterbirdICS"
+   ${EndIf}
+ !macroend
+ !define SetHandlersCalendar "!insertmacro SetHandlersCalendar"
+ 
+@@ -261,9 +261,9 @@
+ 
+   StrCpy $0 "SOFTWARE\Classes"
+   StrCpy $1 "$\"$8$\" $\"%1$\""
+ 
+-  ${AddHandlerValues} "$0\Thunderbird.Url.net.thunderbird"  "$1" "$8,0" "${AppRegNameMail} URL" "delete" ""
++  ${AddHandlerValues} "$0\Betterbird.Url.net.thunderbird"  "$1" "$8,0" "${AppRegNameMail} URL" "delete" ""
+   ${AddHandlerValues} "$0\net.thunderbird" "$1" "$8,0" "${AppRegNameMail} URL" "true" ""
+ !macroend
+ !define SetHandlersNetThunderbird "!insertmacro SetHandlersNetThunderbird"
+ 
+@@ -348,14 +348,14 @@
+   ; Capabilities registry keys
+   WriteRegStr ${RegKey} "$0\Capabilities" "ApplicationDescription" "$(REG_APP_DESC)"
+   WriteRegStr ${RegKey} "$0\Capabilities" "ApplicationIcon" "$8,0"
+   WriteRegStr ${RegKey} "$0\Capabilities" "ApplicationName" "${AppRegNameMail}"
+-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".eml"   "ThunderbirdEML"
+-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".wdseml" "ThunderbirdEML"
++  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".eml"   "BetterbirdEML"
++  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".wdseml" "BetterbirdEML"
+   WriteRegStr ${RegKey} "$0\Capabilities\StartMenu" "Mail" "${ClientsRegName}"
+-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "mailto" "Thunderbird.Url.mailto"
+-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "mid" "Thunderbird.Url.mid"
+-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "net.thunderbird" "Thunderbird.Url.net.thunderbird"
++  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "mailto" "Betterbird.Url.mailto"
++  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "mid" "Betterbird.Url.mid"
++  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "net.thunderbird" "Betterbird.Url.net.thunderbird"
+ 
+   ; Registered Application
+   WriteRegStr ${RegKey} "Software\RegisteredApplications" "${AppRegNameMail}" "$0\Capabilities"
+ !macroend
+@@ -480,11 +480,11 @@
+   ; Capabilities registry keys
+   WriteRegStr ${RegKey} "$0\Capabilities" "ApplicationDescription" "$(REG_APP_DESC)"
+   WriteRegStr ${RegKey} "$0\Capabilities" "ApplicationIcon" "$8,0"
+   WriteRegStr ${RegKey} "$0\Capabilities" "ApplicationName" "${AppRegNameNews}"
+-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "nntp" "Thunderbird.Url.news"
+-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "news" "Thunderbird.Url.news"
+-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "snews" "Thunderbird.Url.news"
++  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "nntp" "Betterbird.Url.news"
++  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "news" "Betterbird.Url.news"
++  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "snews" "Betterbird.Url.news"
+ 
+   ; Protocols
+   StrCpy $1 "$\"$8$\" -osint -mail $\"%1$\""
+   ${AddHandlerValues} "$0\Protocols\nntp" "$1" "$8,0" "${AppRegNameNews} URL" "true" ""
+@@ -523,11 +523,11 @@
+   ; Capabilities registry keys
+   WriteRegStr ${RegKey} "$0\Capabilities" "ApplicationDescription" "$(REG_APP_DESC)"
+   WriteRegStr ${RegKey} "$0\Capabilities" "ApplicationIcon" "$8,0"
+   WriteRegStr ${RegKey} "$0\Capabilities" "ApplicationName" "${AppRegNameCalendar}"
+-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".ics"    "ThunderbirdICS"
+-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "webcal" "Thunderbird.Url.webcal"
+-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "webcals" "Thunderbird.Url.webcal"
++  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".ics"    "BetterbirdICS"
++  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "webcal" "Betterbird.Url.webcal"
++  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "webcals" "Betterbird.Url.webcal"
+ 
+   ; Registered Application
+   WriteRegStr ${RegKey} "Software\RegisteredApplications" "${AppRegNameCalendar}" "$0\Capabilities"
+ !macroend
+@@ -659,50 +659,50 @@
+   StrCpy $3 "$\"$8$\" $\"%1$\""
+ 
+   ; Only set the file and protocol handlers if the existing one under HKCR is
+   ; for this install location.
+-  ${IsHandlerForInstallDir} "ThunderbirdEML" $R9
++  ${IsHandlerForInstallDir} "BetterbirdEML" $R9
+   ${If} "$R9" == "true"
+-    ${AddHandlerValues} "SOFTWARE\Classes\ThunderbirdEML" "$3" "$8,0" \
++    ${AddHandlerValues} "SOFTWARE\Classes\BetterbirdEML" "$3" "$8,0" \
+                         "${AppRegNameMail} Document" "" ""
+   ${EndIf}
+ 
+-  ${IsHandlerForInstallDir} "Thunderbird.Url.mailto" $R9
++  ${IsHandlerForInstallDir} "Betterbird.Url.mailto" $R9
+   ${If} "$R9" == "true"
+-    ${AddHandlerValues} "SOFTWARE\Classes\Thunderbird.Url.mailto" "$1" "$8,0" \
++    ${AddHandlerValues} "SOFTWARE\Classes\Betterbird.Url.mailto" "$1" "$8,0" \
+                         "${AppRegNameMail} URL" "delete" ""
+   ${EndIf}
+ 
+   ${IsHandlerForInstallDir} "mailto" $R9
+   ${If} "$R9" == "true"
+     ${AddHandlerValues} "SOFTWARE\Classes\mailto" "$1" "$8,0" "" "" ""
+   ${EndIf}
+ 
+-  ${IsHandlerForInstallDir} "Thunderbird.Url.mid" $R9
++  ${IsHandlerForInstallDir} "Betterbird.Url.mid" $R9
+   ${If} "$R9" == "true"
+-    ${AddHandlerValues} "SOFTWARE\Classes\Thunderbird.Url.mid" "$3" "$8,0" \
++    ${AddHandlerValues} "SOFTWARE\Classes\Betterbird.Url.mid" "$3" "$8,0" \
+                         "${AppRegNameMail} URL" "delete" ""
+   ${EndIf}
+ 
+   ${IsHandlerForInstallDir} "mid" $R9
+   ${If} "$R9" == "true"
+     ${AddHandlerValues} "SOFTWARE\Classes\mid" "$3" "$8,0" "" "" ""
+   ${EndIf}
+ 
+-  ${IsHandlerForInstallDir} "Thunderbird.Url.net.thunderbird" $R9
++  ${IsHandlerForInstallDir} "Betterbird.Url.net.thunderbird" $R9
+   ${If} "$R9" == "true"
+-    ${AddHandlerValues} "SOFTWARE\Classes\Thunderbird.Url.net.thunderbird" "$3" "$8,0" \
++    ${AddHandlerValues} "SOFTWARE\Classes\Betterbird.Url.net.thunderbird" "$3" "$8,0" \
+                         "${AppRegNameMail} URL" "delete" ""
+   ${EndIf}
+ 
+   ${IsHandlerForInstallDir} "net.thunderbird" $R9
+   ${If} "$R9" == "true"
+     ${AddHandlerValues} "SOFTWARE\Classes\net.thunderbird" "$3" "$8,0" "" "" ""
+   ${EndIf}
+ 
+-  ${IsHandlerForInstallDir} "Thunderbird.Url.news" $R9
++  ${IsHandlerForInstallDir} "Betterbird.Url.news" $R9
+   ${If} "$R9" == "true"
+-    ${AddHandlerValues} "SOFTWARE\Classes\Thunderbird.Url.news" "$2" "$8,0" \
++    ${AddHandlerValues} "SOFTWARE\Classes\Betterbird.Url.news" "$2" "$8,0" \
+                         "${AppRegNameNews} URL" "delete" ""
+   ${EndIf}
+ 
+   ${IsHandlerForInstallDir} "news" $R9
+@@ -719,11 +719,11 @@
+   ${If} "$R9" == "true"
+     ${AddHandlerValues} "SOFTWARE\Classes\nntp" "$2" "$8,0" "" "" ""
+   ${EndIf}
+ 
+-  ${IsHandlerForInstallDir} "Thunderbird.Url.webcal" $R9
++  ${IsHandlerForInstallDir} "Betterbird.Url.webcal" $R9
+   ${If} "$R9" == "true"
+-    ${AddHandlerValues} "SOFTWARE\Classes\Thunderbird.Url.webcal" "$3" "$8,0" \
++    ${AddHandlerValues} "SOFTWARE\Classes\Betterbird.Url.webcal" "$3" "$8,0" \
+                         "${AppRegNameCalendar} URL" "delete" ""
+   ${EndIf}
+ 
+   ${IsHandlerForInstallDir} "webcal" $R9
+@@ -735,11 +735,11 @@
+   ${If} "$R9" == "true"
+     ${AddHandlerValues} "SOFTWARE\Classes\webcals" "$3" "$8,0" "" "" ""
+   ${EndIf}
+ 
+-  ${IsHandlerForInstallDir} "ThunderbirdICS" $R9
++  ${IsHandlerForInstallDir} "BetterbirdICS" $R9
+   ${If} "$R9" == "true"
+-    ${AddHandlerValues} "SOFTWARE\Classes\ThunderbirdICS" "$3" "$8,0" \
++    ${AddHandlerValues} "SOFTWARE\Classes\BetterbirdICS" "$3" "$8,0" \
+                         "${AppRegNameCalendar} Document" "" ""
+   ${EndIf}
+ !macroend
+ !define UpdateProtocolHandlers "!insertmacro UpdateProtocolHandlers"
+@@ -847,10 +847,10 @@
+ 
+   ; The shim for 1.5.0.10 writes out a set of bogus keys which we need to
+   ; cleanup. Intentionally hard coding Mozilla Thunderbird here
+   ; as this is the string used by the shim.
+-  DeleteRegKey HKLM "$0\Mozilla Thunderbird.Url.mailto"
+-  DeleteRegValue HKLM "Software\RegisteredApplications" "Mozilla Thunderbird"
++  DeleteRegKey HKLM "$0\Betterbird.Url.mailto"
++  DeleteRegValue HKLM "Software\RegisteredApplications" "Betterbird"
+ 
+   ; Remove the app compatibility registry key
+   StrCpy $0 "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
+   DeleteRegValue HKLM "$0" "$INSTDIR\${FileMainEXE}"
+diff --git a/mail/installer/windows/nsis/uninstaller.nsi b/mail/installer/windows/nsis/uninstaller.nsi
+--- a/mail/installer/windows/nsis/uninstaller.nsi
++++ b/mail/installer/windows/nsis/uninstaller.nsi
+@@ -287,9 +287,9 @@ Section "Uninstall"
+     ApplicationID::UninstallJumpLists "$AppUserModelID"
+   ${EndIf}
+ 
+   ; Clean up old maintenance service logs
+-  ${un.CleanMaintenanceServiceLogs} "Thunderbird"
++  ${un.CleanMaintenanceServiceLogs} "Betterbird"
+ 
+   ; Remove any app model id's stored in the registry for this install path
+   DeleteRegValue HKCU "Software\Mozilla\${AppName}\TaskBarIDs" "$INSTDIR"
+   DeleteRegValue HKLM "Software\Mozilla\${AppName}\TaskBarIDs" "$INSTDIR"
+@@ -306,15 +306,15 @@ Section "Uninstall"
+     ${un.RegCleanUninstall}
+     ${un.DeleteShortcuts}
+   ${EndIf}
+ 
+-  ${un.RegCleanAppHandler} "Thunderbird.Url.mailto"
+-  ${un.RegCleanAppHandler} "Thunderbird.Url.mid"
+-  ${un.RegCleanAppHandler} "Thunderbird.Url.net.thunderbird"
+-  ${un.RegCleanAppHandler} "Thunderbird.Url.news"
+-  ${un.RegCleanAppHandler} "Thunderbird.Url.webcal"
+-  ${un.RegCleanAppHandler} "ThunderbirdEML"
+-  ${un.RegCleanAppHandler} "ThunderbirdICS"
++  ${un.RegCleanAppHandler} "Betterbird.Url.mailto"
++  ${un.RegCleanAppHandler} "Betterbird.Url.mid"
++  ${un.RegCleanAppHandler} "Betterbird.Url.net.thunderbird"
++  ${un.RegCleanAppHandler} "Betterbird.Url.news"
++  ${un.RegCleanAppHandler} "Betterbird.Url.webcal"
++  ${un.RegCleanAppHandler} "BetterbirdEML"
++  ${un.RegCleanAppHandler} "BetterbirdICS"
+   ${un.RegCleanProtocolHandler} "mailto"
+   ${un.RegCleanProtocolHandler} "mid"
+   ${un.RegCleanProtocolHandler} "net.thunderbird"
+   ${un.RegCleanProtocolHandler} "news"
+@@ -323,27 +323,27 @@ Section "Uninstall"
+   ${un.RegCleanProtocolHandler} "webcal"
+   ${un.RegCleanProtocolHandler} "webcals"
+ 
+   ClearErrors
+-  ReadRegStr $R9 HKCR "ThunderbirdEML" ""
+-  ; Don't clean up the file handlers if the ThunderbirdEML key still exists
++  ReadRegStr $R9 HKCR "BetterbirdEML" ""
++  ; Don't clean up the file handlers if the BetterbirdEML key still exists
+   ; since there could be a second installation that may be the default file
+   ; handler.
+   ${If} ${Errors}
+-    ${un.RegCleanFileHandler}  ".eml"   "ThunderbirdEML"
+-    ${un.RegCleanFileHandler}  ".wdseml" "ThunderbirdEML"
++    ${un.RegCleanFileHandler}  ".eml"   "BetterbirdEML"
++    ${un.RegCleanFileHandler}  ".wdseml" "BetterbirdEML"
+     DeleteRegValue HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\explorer\KindMap" ".wdseml"
+     ; It doesn't matter if the value didn't exist
+     ClearErrors
+   ${EndIf}
+ 
+   ClearErrors
+-  ReadRegStr $R9 HKCR "ThunderbirdICS" ""
+-  ; Don't clean up the file handlers if the ThunderbirdICS key still exists
++  ReadRegStr $R9 HKCR "BetterbirdICS" ""
++  ; Don't clean up the file handlers if the BetterbirdICS key still exists
+   ; since there could be a second installation that may be the default file
+   ; handler.
+   ${If} ${Errors}
+-    ${un.RegCleanFileHandler}  ".ics"   "ThunderbirdICS"
++    ${un.RegCleanFileHandler}  ".ics"   "BetterbirdICS"
+     ; It doesn't matter if the value didn't exist
+     ClearErrors
+   ${EndIf}
+ 
+@@ -363,9 +363,9 @@ Section "Uninstall"
+   ; refers to this install location. The Clients\* keys are independent
+   ; of the default app for the OS settings. The XPInstall base un-installer
+   ; always removes these keys if it is uninstalling the default app and it
+   ; will always replace the keys when installing even if there is another
+-  ; install of Thunderbird that is set as the
++  ; install of Betterbird that is set as the
+   ; default app. Now the keys are always updated on install but are only
+   ; removed if they refer to this install location.
+   ${If} "$INSTDIR" == "$R1"
+     DeleteRegKey HKLM "Software\Clients\Mail\${ClientsRegName}"
