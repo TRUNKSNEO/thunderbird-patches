@@ -1,0 +1,161 @@
+# HG changeset patch
+# User Betterbird <betterbird@betterbird.eu>
+# Date 1778745416 -7200
+# Parent  bcaf41f672f5d7ea613dd3ea0d3f1fdeaa8396f6
+Branding: Don't show 'About Rights' and Privacy notice at start. Remove "About" and "Resources" from Account Central.
+
+diff --git a/mail/app/profile/all-thunderbird.js b/mail/app/profile/all-thunderbird.js
+--- a/mail/app/profile/all-thunderbird.js
++++ b/mail/app/profile/all-thunderbird.js
+@@ -22,14 +22,9 @@ pref("mail.biff.animate_dock_icon", fals
+ 
+ pref("mail.rights.version", 0);
+ 
+ // Don't show the about:rights notification in debug or non-official builds.
+-#ifdef DEBUG
+ pref("mail.rights.override", true);
+-#endif
+-#ifndef MOZILLA_OFFICIAL
+-pref("mail.rights.override", true);
+-#endif
+ 
+ // At startup, should we check to see if the installation
+ // date is older than some threshold
+ pref("app.update.checkInstallTime", true);
+@@ -168,15 +163,17 @@ pref("toolkit.datacollection.infoURL",
+ // URL for "Learn More" for Crash Reporter.
+ pref("toolkit.crashreporter.infoURL",
+      "https://www.mozilla.org/thunderbird/legal/privacy/#crash-reporter");
+ 
+-pref("datareporting.healthreport.uploadEnabled", true); // Required to enable telemetry pings.
++pref("datareporting.healthreport.uploadEnabled", false); // Required to enable telemetry pings, also switch off launcher telemetry in
++                                                         // HKCU\SOFTWARE\Thunderbird\Launcher, see bug 1543807 part 1.
+ pref("datareporting.healthreport.infoURL", "https://www.mozilla.org/thunderbird/legal/privacy/#health-report");
+ 
++// MOZ_DATA_REPORTING should not be set, see mail/moz.configure.
+ #ifdef MOZ_DATA_REPORTING
+ pref("datareporting.policy.dataSubmissionEnabled", true);
+ pref("datareporting.policy.dataSubmissionPolicyAcceptedVersion", 0);
+-pref("datareporting.policy.dataSubmissionPolicyBypassNotification", false);
++pref("datareporting.policy.dataSubmissionPolicyBypassNotification", true);
+ pref("datareporting.policy.currentPolicyVersion", 2);
+ pref("datareporting.policy.firstRunURL", "https://www.mozilla.org/thunderbird/legal/privacy/");
+ #endif
+ 
+@@ -1369,9 +1366,9 @@ pref("devtools.popup.disable_autohide", 
+ pref("toolkit.telemetry.server", "https://incoming-telemetry.thunderbird.net");
+ pref("toolkit.telemetry.server_owner", "Thunderbird");
+ 
+ // Determines if Telemetry pings can be archived locally.
+-pref("toolkit.telemetry.archive.enabled", true);
++pref("toolkit.telemetry.archive.enabled", false);
+ // Enables sending the shutdown ping when Thunderbird shuts down.
+ pref("toolkit.telemetry.shutdownPingSender.enabled", true);
+ // Enables sending the shutdown ping using the pingsender from the first session.
+ pref("toolkit.telemetry.shutdownPingSender.enabledFirstSession", false);
+diff --git a/mail/themes/shared/mail/accountCentral.css b/mail/themes/shared/mail/accountCentral.css
+--- a/mail/themes/shared/mail/accountCentral.css
++++ b/mail/themes/shared/mail/accountCentral.css
+@@ -9,9 +9,9 @@ html {
+   block-size: 100%;
+ }
+ 
+ :root {
+-  --bg-watermark: light-dark(url("chrome://messenger/skin/images/account-watermark.png"), url("chrome://messenger/skin/images/account-watermark-light.png"));
++  /* removed watermark here */
+ }
+ 
+ [hidden] {
+   display: none !important; /* Ensure flex items obey hidden="hidden". */
+@@ -33,9 +33,8 @@ body {
+ 
+ #accountCentral {
+   display: flex;
+   flex-direction: column;
+-  background-image: var(--bg-watermark);
+   background-position: bottom right;
+   background-repeat: no-repeat;
+   color: var(--color-text-base);
+   block-size: 100%;
+diff --git a/mailnews/base/content/msgAccountCentral.xhtml b/mailnews/base/content/msgAccountCentral.xhtml
+--- a/mailnews/base/content/msgAccountCentral.xhtml
++++ b/mailnews/base/content/msgAccountCentral.xhtml
+@@ -260,78 +260,7 @@
+           ></button>
+         </aside>
+       </section>
+ 
+-      <section class="account-central-section">
+-        <h2 class="section-title" data-l10n-id="about-title"></h2>
+-
+-        <aside class="row-container">
+-          <p data-l10n-id="about-paragraph"></p>
+-          <p
+-            id="donationParagraph"
+-            data-l10n-id="about-paragraph-consider-donation"
+-          >
+-            <a
+-              id="donationLink"
+-              href="https://www.thunderbird.net/donate/?utm_source=account_hub_tb_release&amp;utm_medium=referral&amp;utm_content=paragraph_text"
+-              class="donation-link"
+-              data-l10n-name="donation-link"
+-              onclick="openLink(event)"
+-              onkeypress="
+-                if (event.key == 'Enter') {
+-                  openLink(event);
+-                }
+-              "
+-              tabindex="0"
+-            ></a>
+-          </p>
+-        </aside>
+-      </section>
+-
+-      <section class="account-central-section">
+-        <h2 class="section-title" data-l10n-id="resources-title"></h2>
+-
+-        <aside class="row-container">
+-          <a
+-            id="supportLink"
+-            href="https://support.mozilla.org/products/thunderbird"
+-            class="resource-link"
+-            data-l10n-id="support-link"
+-            onclick="openLink(event)"
+-            onkeypress="
+-              if (event.key == 'Enter') {
+-                openLink(event);
+-              }
+-            "
+-            tabindex="0"
+-          ></a>
+-          <a
+-            id="involvedLink"
+-            href="https://www.thunderbird.net/participate/"
+-            class="resource-link"
+-            data-l10n-id="involved-link"
+-            onclick="openLink(event)"
+-            onkeypress="
+-              if (event.key == 'Enter') {
+-                openLink(event);
+-              }
+-            "
+-            tabindex="0"
+-          ></a>
+-          <a
+-            id="developerLink"
+-            href="https://developer.thunderbird.net/"
+-            class="resource-link"
+-            data-l10n-id="developer-link"
+-            onclick="openLink(event)"
+-            onkeypress="
+-              if (event.key == 'Enter') {
+-                openLink(event);
+-              }
+-            "
+-            tabindex="0"
+-          ></a>
+-        </aside>
+-      </section>
+     </main>
+   </body>
+ </html>

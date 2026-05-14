@@ -14,5 +14,5 @@ branding/05b-branding-localised-installer.patch
 branding/05b-branding-UA-string.patch
 branding/05c-branding-appstrings-properties.patch
 branding/06-branding.patch
-# branding/07-branding.patch
-# branding/10-branding-notifications.patch
+branding/07-branding.patch
+branding/10-branding-notifications.patch
