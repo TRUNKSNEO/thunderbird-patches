@@ -1,0 +1,20 @@
+# HG changeset patch
+# User Betterbird <betterbird@betterbird.eu>
+# Date 1778775938 -7200
+# Parent  97bfc5dc573bf35659ac3facd24ac77735ea0587
+Misc: set default of allow-subdirectory-build to true.
+
+diff --git a/python/mozbuild/mozbuild/build_commands.py b/python/mozbuild/mozbuild/build_commands.py
+--- a/python/mozbuild/mozbuild/build_commands.py
++++ b/python/mozbuild/mozbuild/build_commands.py
+@@ -147,9 +147,9 @@ def _set_priority(command_context, prior
+     help="Show all warnings including third-party and suppressed warnings.",
+ )
+ @CommandArgument(
+     "--allow-subdirectory-build",
+-    default=False,
++    default=True,
+     action="store_true",
+     help="Allow building subdirectories (not recommended, can result in bad tree state).",
+ )
+ def build(
