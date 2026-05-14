@@ -1,0 +1,20 @@
+# HG changeset patch
+# User Betterbird <betterbird@betterbird.eu>
+# Date 1778779659 -7200
+# Parent  105dc039056c1537d19a4374eed0b2e131664029
+Misc: Default unified folder to 'no offline search' to avoid unexpected performance hits.
+
+diff --git a/mail/modules/SmartMailboxUtils.sys.mjs b/mail/modules/SmartMailboxUtils.sys.mjs
+--- a/mail/modules/SmartMailboxUtils.sys.mjs
++++ b/mail/modules/SmartMailboxUtils.sys.mjs
+@@ -197,9 +197,9 @@ class SmartMailbox {
+         folderType.name,
+         this.#rootFolder,
+         searchFolders,
+         "ALL",
+-        true
++        false
+       );
+       const folder = wrapper.virtualFolder;
+       folder.setFlag(folderType.flag);
+ 

@@ -1,0 +1,20 @@
+# HG changeset patch
+# User Betterbird <betterbird@betterbird.eu>
+# Date 1778779792 -7200
+# Parent  ca02ca60a0bde558dd9315434c31ee03964a35ae
+Misc: Set pref mail.html_sanitize.drop_conditional_css to false.
+
+diff --git a/mail/app/StaticPrefList.yaml b/mail/app/StaticPrefList.yaml
+--- a/mail/app/StaticPrefList.yaml
++++ b/mail/app/StaticPrefList.yaml
+@@ -120,9 +120,9 @@
+ 
+ # Strip CSS conditional rules in received and sent mail.
+ - name: mail.html_sanitize.drop_conditional_css
+   type: bool
+-  value: true
++  value: false
+   mirror: always
+ 
+ # If true, remove the everything after the "-- \n" signature delimiter when replying.
+ - name: mail.strip_sig_on_reply

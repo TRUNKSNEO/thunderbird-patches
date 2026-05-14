@@ -1,0 +1,38 @@
+# HG changeset patch
+# User Betterbird <betterbird@betterbird.eu>
+# Date 1778779105 -7200
+# Parent  4cff645452bbcbaafc3bdcce616890d7815d1c0a
+Misc: Reduce excessive padding of unified toolbar.
+
+diff --git a/mail/themes/shared/mail/unifiedToolbar.css b/mail/themes/shared/mail/unifiedToolbar.css
+--- a/mail/themes/shared/mail/unifiedToolbar.css
++++ b/mail/themes/shared/mail/unifiedToolbar.css
+@@ -5,9 +5,9 @@
+ @import url("chrome://messenger/skin/shared/unifiedToolbarShared.css");
+ @import url("chrome://messenger/skin/shared/serverMenuItems.css");
+ 
+ :root {
+-  --unified-toolbar-padding: 4px;
++  --unified-toolbar-padding: 2px;
+   --unified-drag-space: 30px;
+   --unified-customization-padding: 30px;
+   /* minimal possible toolbar height */
+   --unified-toolbar-minimal-height: 30px;
+@@ -18,15 +18,15 @@
+   /* searchbar field height + border + block padding */
+   --unified-toolbar-searchbar-height: calc(1.45lh + 4px);
+ 
+   &[uidensity="compact"] {
+-    --unified-toolbar-padding: 1px;
++    --unified-toolbar-padding: 0;
+     --unified-drag-space: 15px;
+     --unified-toolbar-minimal-height: 24px;
+   }
+ 
+   &[uidensity="touch"] {
+-    --unified-toolbar-padding: 7px;
++    --unified-toolbar-padding: 4px;
+   }
+ 
+   &[sizemode="fullscreen"],
+   &:not([customtitlebar]) {

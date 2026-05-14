@@ -16,3 +16,26 @@ branding/05c-branding-appstrings-properties.patch
 branding/06-branding.patch
 branding/07-branding.patch
 branding/10-branding-notifications.patch
+## Misc
+misc/99-misc-release-set-version.patch
+misc/02-misc-user-agent-string.patch
+misc/03-misc-update-check.patch
+misc/03a-misc-block-rogue-addons.patch
+misc/05-misc-no-langpack-download.patch
+misc/08-misc-eoy-appeal-bb-url.patch
+misc/09-misc-message-pane-width.patch
+misc/11-misc-set-even-rows-for-userchrome-css.patch
+misc/12-misc-unified-toolbar-padding.patch
+misc/14-misc-id-server-key-in-troubleshoot.patch
+misc/15-misc-pref-open-attachment-readonly.patch
+misc/16-misc-disable-otr.patch
+misc/16-misc-unified-no-offline-default.patch
+misc/17-misc-folderpane-expand-delay.patch
+misc/19-misc-language-tool-downgrade.patch
+misc/23-misc-dont-drop-conditional-css.patch
+misc/24-misc-remove-no-message-found.patch
+misc/25-misc-manually-sort-folders-128-compat.patch
+misc/26-misc-account-hub-font-prefs.patch
+misc/27-misc-mark-button-unified.patch
+misc/32-misc-archive-folder-flag.patch
+misc/35-misc-include-protocol-in-password-prompt.patch

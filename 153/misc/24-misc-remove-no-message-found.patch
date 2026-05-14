@@ -1,0 +1,27 @@
+# HG changeset patch
+# User Betterbird <betterbird@betterbird.eu>
+# Date 1778779968 -7200
+# Parent  9f4a43060edeed7f88640d07efefed401d0fcc99
+Misc: Don't ever show 'No message found', it adds no value.
+
+diff --git a/mail/base/content/about3Pane.js b/mail/base/content/about3Pane.js
+--- a/mail/base/content/about3Pane.js
++++ b/mail/base/content/about3Pane.js
+@@ -5117,13 +5117,12 @@ var threadPane = {
+         }
+         this.scrollDetected = true;
+         break;
+       case "showplaceholder":
+-        threadTree.updatePlaceholders([
+-          folderTree.selection.size > 1
+-            ? "placeholderMultipleFolders"
+-            : "placeholderNoMessages",
+-        ]);
++        // Don't ever show 'No message found', it adds no value.
++        threadTree.updatePlaceholders(
++          folderTree.selection.size > 1 ? ["placeholderMultipleFolders"] : []
++        );
+         break;
+     }
+   },
+ 

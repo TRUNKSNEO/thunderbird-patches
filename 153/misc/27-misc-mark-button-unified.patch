@@ -1,0 +1,33 @@
+# HG changeset patch
+# User Betterbird <betterbird@betterbird.eu>
+# Date 1778780417 -7200
+# Parent  603beff050157d155495dfbaa96b6dacbd3e1c0d
+Misc: Add junk controls to Mark button on unified toolbar.
+
+diff --git a/mail/components/unifiedtoolbar/content/unifiedToolbarPopups.inc.xhtml b/mail/components/unifiedtoolbar/content/unifiedToolbarPopups.inc.xhtml
+--- a/mail/components/unifiedtoolbar/content/unifiedToolbarPopups.inc.xhtml
++++ b/mail/components/unifiedtoolbar/content/unifiedToolbarPopups.inc.xhtml
+@@ -94,8 +94,23 @@
+             label="&markStarredCmd.label;"
+             accesskey="&markStarredCmd.accesskey;"
+             key="key_toggleFlagged"
+             command="cmd_markAsFlagged"/>
++  <menuseparator id="markAsFlaggedSeparator"/>
++  <menuitem id="button-markAsJunk"
++            label="&markAsJunkCmd.label;"
++            accesskey="&markAsJunkCmd.accesskey;"
++            key="key_markJunk"
++            command="cmd_markAsJunk"/>
++  <menuitem id="button-markAsNotJunk"
++            label="&markAsNotJunkCmd.label;"
++            accesskey="&markAsNotJunkCmd.accesskey;"
++            key="key_markNotJunk"
++            command="cmd_markAsNotJunk"/>
++  <menuitem id="button-recalculateJunkScore"
++            label="&recalculateJunkScoreCmd.label;"
++            accesskey="&recalculateJunkScoreCmd.accesskey;"
++            command="cmd_recalculateJunkScore"/>
+ </menupopup>
+ <menupopup id="toolbarViewPickerPopup"
+            class="gutter-popup"
+            onpopupshowing="RefreshViewPopup(this);">

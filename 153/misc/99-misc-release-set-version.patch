@@ -1,0 +1,16 @@
+# HG changeset patch
+# User Betterbird <betterbird@betterbird.eu>
+# Date 1778777324 -7200
+# Parent  c711f0687c496239cef7874ed002e0e3e7c89e29
+Release: Set version for release
+
+!!!                                                       !!!
+!!! Do not forget to run ./build.sh NNN delres on Windows !!!
+!!!                                                       !!!
+
+diff --git a/mail/config/version_display.txt b/mail/config/version_display.txt
+--- a/mail/config/version_display.txt
++++ b/mail/config/version_display.txt
+@@ -1,1 +1,1 @@
+-152.0a1
++152.0a1-bb1

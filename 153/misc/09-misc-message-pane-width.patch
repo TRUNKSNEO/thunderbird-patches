@@ -1,0 +1,34 @@
+# HG changeset patch
+# User Betterbird <betterbird@betterbird.eu>
+# Date 1778778803 -7200
+# Parent  71b193366927eea063f64f8adf6b6aac4af46c94
+Misc: Reduce minimum width of Message Pane (vertical view, see bug 1815407).
+
+diff --git a/mail/base/content/about3Pane.xhtml b/mail/base/content/about3Pane.xhtml
+--- a/mail/base/content/about3Pane.xhtml
++++ b/mail/base/content/about3Pane.xhtml
+@@ -347,9 +347,9 @@
+     </div>
+   </div>
+   <hr is="pane-splitter" id="messagePaneSplitter"
+       resize-id="messagePane"
+-      collapse-width="300"
++      collapse-width="200"
+       collapse-height="100" />
+ #include templates/messagePaneTemplate.inc.xhtml
+   <message-pane id="messagePane" class="collapsed-by-splitter"></message-pane>
+   <xul:browser id="accountCentralBrowser" hidden="hidden"/>
+diff --git a/mail/themes/shared/mail/about3Pane.css b/mail/themes/shared/mail/about3Pane.css
+--- a/mail/themes/shared/mail/about3Pane.css
++++ b/mail/themes/shared/mail/about3Pane.css
+@@ -156,9 +156,9 @@ body {
+   box-sizing: border-box;
+   background-color: var(--layout-background-1);
+   /* Matches the collapse-height and collapse-width on the splitter. */
+   min-block-size: 100px;
+-  min-inline-size: 300px;
++  min-inline-size: 200px;
+   overflow: auto;
+   display: flex;
+   flex-direction: column;
+   contain: strict;
