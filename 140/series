@@ -73,8 +73,8 @@ cherrypicks/617855-fix-sort-by-unread-threaded.patch ## https://hg.mozilla.org/c
 cherrypicks/1986289-dont-close-filter-dialog-on-enter.patch ## https://hg.mozilla.org/comm-central/rev/037434bf26d8
 cherrypicks/1986558-no-reset-modification-count-on-id-change.patch ## https://hg.mozilla.org/comm-central/rev/d97aeea36946
 cherrypicks/1986428-fix-js-error-in-gloda.patch ## https://hg.mozilla.org/comm-central/rev/e79f24482f96
-bugs/1976738-font-colour-plaintext.patch ## under review, and needs fix, see following patch
-bugs/1976738-font-colour-plaintext-take2.patch ## Betterbird's own patch to make it work
+bugs/1976738-font-colour-plaintext.patch ## never went anywhere, and needs fix, see following patch -> 153
+bugs/1976738-font-colour-plaintext-take2.patch ## Betterbird's own patch to make it work -> 153
 cherrypicks/1987834-dont-remove-observer-no-moz-updater.patch ## https://hg.mozilla.org/comm-central/rev/1cc168c9d0a5
 cherrypicks/1988230-csp-for-confirmPubkeyImport.patch ## https://hg.mozilla.org/comm-central/rev/b243b7f8dcd4
 cherrypicks/694780-disable-copy-news-filter.patch ## https://hg.mozilla.org/comm-central/rev/feb815f624ac
@@ -98,13 +98,13 @@ cherrypicks/1991417-new-message-on-empty-pane-part1.patch ## https://hg.mozilla.
 cherrypicks/1991417-new-message-on-empty-pane-part2.patch ## https://hg.mozilla.org/comm-central/rev/28c7d645a197
 bugs/1829728-disambiguate-folders-with-same-name.patch ## in TB 146, needed rebasing due to the localizedName stuff, bug 1960526
 bugs/1829748-sort-recent-destinations.patch ## in TB 146
-bugs/2000453-add-MRU-to-recent-folder.patch ## reviewer wanted different solution.
+bugs/2000453-add-MRU-to-recent-folder.patch ## reviewer wanted different solution -> 153
 bugs/1851875-enable-remote-content-in-eml.patch ## in TB 145
 cherrypicks/1921406-more-than-one-vcard.patch ## https://hg.mozilla.org/comm-central/rev/66e495758c52
 cherrypicks/1984376-fastmail-use-existing-pw.patch ## https://hg.mozilla.org/comm-central/rev/6478f8b14ab8
 cherrypicks/1995926-vcard-file-type.patch ## https://hg.mozilla.org/comm-central/rev/153d0746a240
 cherrypicks/1842514-copy-within-server.patch ## https://hg.mozilla.org/comm-central/rev/7bcca65cbad1
-bugs/1976687-correct-localised-foldernames.patch ## Only fixed for TB 142 in a way that can't be backported due to bug 1960526
+bugs/1976687-correct-localised-foldernames.patch ## Only fixed in TB 142 in a way that can't be backported due to bug 1960526
 bugs/1995417-fix-delete-button-unified-toolbar.patch ## in TB 146
 bugs/1831713-junk-button-unified-toolbar-take2.patch ## in TB 145
 bugs/1999822-write-utf8.patch ## in TB 147
@@ -135,7 +135,7 @@ bugs/533766-move-virtual-folders-imap.patch ## in TB 147
 bugs/1835556-fix-moving-maildir-virtual.patch ## in TB 147
 cherrypicks/341266-remove-read-folders-from-unread.patch ## https://hg.mozilla.org/comm-central/rev/b418552d0dab
 bugs/900117-fix-comma-parsing-file.patch ## in TB 148
-bugs/900117-fix-comma-parsing.patch ## BB extra feature.
+bugs/900117-fix-comma-parsing.patch ## BB extra feature -> 153
 cherrypicks/729685-Windows-time-zone-name.patch ## https://hg.mozilla.org/comm-central/rev/df1e574ed722
 cherrypicks/2008485-avoid-CalDAV-sync-jank.patch ## https://hg.mozilla.org/comm-central/rev/0345b619be9b
 bugs/1991497-avoid-gloda-hang.patch ## in TB 149
@@ -156,10 +156,10 @@ bugs/2013725-account-settings-from-compose-focus.patch ## in TB 149
 cherrypicks/2013486-filter-attribute-after-custom-header.patch ## https://hg.mozilla.org/comm-central/rev/18f6bc914d97
 bugs/2013723-settings-menu-compose-linux.patch ## in TB 149
 bugs/2012358-filters-folder-path-move-copy.patch ## in TB 149
-bugs/2012358-follow-up-revert-path-in-action-target.patch
+bugs/2012358-follow-up-revert-path-in-action-target.patch ## fixed in TB 149 via bug 2017270
 cherrypicks/1921611-handle-snooze-dismiss-errors.patch ## https://hg.mozilla.org/comm-central/rev/9bb559a9fe85
 cherrypicks/1392056-shift-click-edit-draft-button.patch ## https://hg.mozilla.org/comm-central/rev/69790cc9a390
-bugs/493499-fix-access-key-move-copy-again.patch ## in TB 149, added additional access key fixes for move/copy again: v and y
+bugs/493499-fix-access-key-move-copy-again.patch ## in TB 149, added additional access key fixes for move/copy again: v and y -> 153
 cherrypicks/2018063-fix-scroll-to-folder.patch ## https://hg.mozilla.org/comm-central/rev/b9388f8b4e95
 bugs/2017583-fix-spam-folder-picker.patch ## in TB 149
 cherrypicks/2018035-copy-ab-cards.patch ## https://hg.mozilla.org/comm-central/rev/8c9f319d6983
@@ -169,13 +169,13 @@ bugs/2011088-pop-error-handling-part1.patch ## in TB 149
 cherrypicks/2011088-pop-error-handling-part2.patch ## https://hg.mozilla.org/comm-central/rev/963ef2d2de78
 bugs/2020627-pop-deadlock.patch ## in TB 150
 bugs/2004376-enforce-logical-css-properties.patch ## in TB 148, needed so the next two apply
-## cherrypicks/1953072-image-proportion.patch ## https://hg.mozilla.org/comm-central/rev/1d871e5816f5 -- Causes bug 2025103
+## cherrypicks/1953072-image-proportion.patch ## https://hg.mozilla.org/comm-central/rev/1d871e5816f5 -- Causes bug 2025103 -> 153 (backout?)
 bugs/1945321-image-shrink-to-fit.patch ## in TB 150
 bugs/2021848-always-show-calendar-item-links.patch ## in TB 150, solved a bit more drastically
 bugs/2029007-quote-html-pre.patch ## in TB 151
-bugs/671497-threading-issues-part1.patch ## under review for TB 152
-bugs/671497-threading-issues-part2.patch ## under review for TB 152
-bugs/1913385-phantom-twisties-xf-deletion.patch ## under review for TB 152
+bugs/671497-threading-issues-part1.patch ## in TB 152
+bugs/671497-threading-issues-part2.patch ## in TB 152
+bugs/1913385-phantom-twisties-xf-deletion.patch ## in TB 152
 ## Features
 features/01-feature-activity-manager-in-tab.patch
 features/02-feature-Windows-systray-tooltip.patch
