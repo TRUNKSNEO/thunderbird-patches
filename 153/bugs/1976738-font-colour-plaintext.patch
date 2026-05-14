@@ -1,0 +1,53 @@
+# HG changeset patch
+# User aleca
+# Date 1778787598 -7200
+# Node ID 0d0defe7a650273ee4f578c6d34d6f8a47b032c6
+# Parent  df08fe1c66a6bb6c237d42bd71fbd1d3dfb17de6
+Bug 1976738 - Let the background and foreground color customization of the message compose affect also plaintext compositions.
+
+diff --git a/mail/components/compose/content/MsgComposeCommands.js b/mail/components/compose/content/MsgComposeCommands.js
+--- a/mail/components/compose/content/MsgComposeCommands.js
++++ b/mail/components/compose/content/MsgComposeCommands.js
+@@ -673,8 +673,10 @@ var stateListener = {
+           Services.prefs.getBoolPref("mail.dark-reader.enabled", false);
+         lazy.QuoteSanitizer.sanitize(doc, isDarkMode);
+       }
+       loadHTMLMsgPrefs();
++    } else {
++      loadPlainTextStyle();
+     }
+     AdjustFocus();
+   },
+ 
+@@ -10844,8 +10846,31 @@ function setContactsSidebarVisibility(sh
+     }
+   }
+ }
+ 
++/**
++ * Add inline style to the HTML document of a plaintext message compose if the
++ * users wants to use custom colors. These changes will not be sent via email
++ * since the plaintext message doesn't support inline style.
++ */
++function loadPlainTextStyle() {
++  // Bail out if there are no custom colors.
++  // We don't check or clear any existing colors because this feature is not
++  // connected for hot-reload. Users will need to close the compose window and
++  // reopen it to not see an outdated style.
++  if (Services.prefs.getBoolPref("msgcompose.default_colors")) {
++    return;
++  }
++
++  const editor = GetCurrentEditor();
++  editor.document.documentElement.style.backgroundColor =
++    Services.prefs.getCharPref("msgcompose.background_color", "");
++  editor.document.documentElement.style.color = Services.prefs.getCharPref(
++    "msgcompose.text_color",
++    ""
++  );
++}
++
+ function loadHTMLMsgPrefs() {
+   const fontFace = Services.prefs.getStringPref("msgcompose.font_face", "");
+   if (fontFace) {
+     doStatefulCommand("cmd_fontFace", fontFace, true);

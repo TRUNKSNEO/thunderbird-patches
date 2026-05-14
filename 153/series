@@ -39,3 +39,10 @@ misc/26-misc-account-hub-font-prefs.patch
 misc/27-misc-mark-button-unified.patch
 misc/32-misc-archive-folder-flag.patch
 misc/35-misc-include-protocol-in-password-prompt.patch
+## Cherry-pick left-overs: Bugs in the context of previous fixes which didn't make it.
+bugs/1976738-font-colour-plaintext.patch ## never went anywhere, and needs fix, see following patch
+bugs/1976738-font-colour-plaintext-take2.patch ## Betterbird's own patch to make it work
+bugs/2021553-access-keys-move-copy-again.patch
+bugs/900117-fix-comma-parsing.patch ## BB extra feature.
+bugs/backout-1953072-for-causing-2025103-image-scaling.patch
+features/feature-2000453-mru-alpha-recent-folder.patch
