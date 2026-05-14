@@ -1,7 +1,7 @@
 # HG changeset patch
 # User Betterbird <betterbird@betterbird.eu>
 # Date 1778710691 -7200
-# Parent  f0fadc79ac77087f83601d674676ad8ddefd3621
+# Parent  e7a04ad4a61359e49ff91410e7b91052a2263d77
 Branding 6: Clean up About box, switch off the updater, fix donation links.
 * * *
 Misc: Add ! to helpus.end, to see get 'Make a donation!'
@@ -65,7 +65,7 @@ diff --git a/mail/base/content/aboutDialog.xhtml b/mail/base/content/aboutDialog
          <span id="distributionId" class="text-blurb"></span>
  
          <xul:vbox id="detailsBox">
-@@ -142,43 +140,25 @@
+@@ -142,43 +140,26 @@
                 data-l10n-attrs="{&quot;channel&quot;: &quot;&quot;}">
              <span id="currentChannel" data-l10n-name="current-channel"></span>
            </div>
@@ -90,9 +90,10 @@ diff --git a/mail/base/content/aboutDialog.xhtml b/mail/base/content/aboutDialog
 -            <a class="text-link tab-link" href="about:credits" data-l10n-name="community-credits-link"></a>
 +          <div id="betterbirdLink" class="text-blurb">
 +            <a class="text-link browser-link" href="https://www.betterbird.eu/">www.betterbird.eu</a>
-           </div>
++          </div>
 +          <!-- communityDesc is switched off via JS for Daily builds -->
 +          <div class="text-blurb" id="communityDesc">
+           </div>
            <div class="text-blurb" id="contributeDesc" data-l10n-id="about-donation">
 -            <a class="text-link browser-link" href="https://www.thunderbird.net/donate/?utm_source=thunderbird-client&amp;utm_medium=referral&amp;utm_content=about-dialog"
 +            <a class="text-link browser-link" href="https://www.betterbird.eu/donate/"
