@@ -1,4 +1,5 @@
 # HG changeset patch
+# User Daniel Richard G. <skunk@iSKUNK.ORG>
 # Date 1778859703 -7200
 # Parent  708b97148f2fafdb62d95d2c1280ea7c06ace7b9
 Make "./mach install" use the correct directory/symlink names.
