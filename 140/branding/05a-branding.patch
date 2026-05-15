@@ -1,13 +1,13 @@
 # HG changeset patch
 # User Betterbird <betterbird@betterbird.eu>
 # Date 1759150038 -7200
-# Parent  53f85b02c586486c5a826ab61352bad8fd04189a
+# Parent  6d4bffd2c49f4422bc9a023316b2b1ca532eed3b
 Branding: Replace Thunderbird.Url.XXX with Betterbird.Url.XXX.
 
 diff --git a/mail/components/MessengerContentHandler.sys.mjs b/mail/components/MessengerContentHandler.sys.mjs
 --- a/mail/components/MessengerContentHandler.sys.mjs
 +++ b/mail/components/MessengerContentHandler.sys.mjs
-@@ -738,9 +738,9 @@ export class MessengerContentHandler {
+@@ -734,9 +734,9 @@ export class MessengerContentHandler {
      if (actionFlagIdx && osintFlagIdx > -1) {
        var param = cmdLine.getArgument(actionFlagIdx + 1);
        if (
@@ -291,17 +291,19 @@ diff --git a/mail/installer/windows/nsis/shared.nsh b/mail/installer/windows/nsi
    ${EndIf}
  !macroend
  !define UpdateProtocolHandlers "!insertmacro UpdateProtocolHandlers"
-@@ -980,9 +980,9 @@
+@@ -980,10 +980,10 @@
  
    ; The shim for 1.5.0.10 writes out a set of bogus keys which we need to
    ; cleanup. Intentionally hard coding Mozilla Thunderbird here
    ; as this is the string used by the shim.
 -  DeleteRegKey HKLM "$0\Mozilla Thunderbird.Url.mailto"
-+  DeleteRegKey HKLM "$0\Mozilla Betterbird.Url.mailto"
-   DeleteRegValue HKLM "Software\RegisteredApplications" "Mozilla Thunderbird"
+-  DeleteRegValue HKLM "Software\RegisteredApplications" "Mozilla Thunderbird"
++  DeleteRegKey HKLM "$0\Betterbird.Url.mailto"
++  DeleteRegValue HKLM "Software\RegisteredApplications" "Betterbird"
  
    ; Remove the app compatibility registry key
    StrCpy $0 "Software\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Layers"
+   DeleteRegValue HKLM "$0" "$INSTDIR\${FileMainEXE}"
 diff --git a/mail/installer/windows/nsis/uninstaller.nsi b/mail/installer/windows/nsis/uninstaller.nsi
 --- a/mail/installer/windows/nsis/uninstaller.nsi
 +++ b/mail/installer/windows/nsis/uninstaller.nsi
