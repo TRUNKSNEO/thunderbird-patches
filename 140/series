@@ -181,6 +181,7 @@ cherrypicks/1843860-avoid-multipart-mixed-around-multipart-signed.patch ## in TB
 bugs/518629-trashcan-icon-imap.patch ## in TB 152
 bugs/1953623-fix-notifications-for-junk.patch ## in TB 152
 bugs/2009620-empty-recent-favourites.patch ## in TB 151, fixed differently.
+cherrypicks/1649402-thread-resorting.patch ## https://hg.mozilla.org/comm-central/rev/e78832dd02a9
 ## Features
 features/01-feature-activity-manager-in-tab.patch
 features/02-feature-Windows-systray-tooltip.patch

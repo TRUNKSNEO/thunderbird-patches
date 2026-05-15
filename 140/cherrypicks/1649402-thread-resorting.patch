@@ -1,0 +1,82 @@
+
+# HG changeset patch
+# User welpy-cw <h.w.forms@arcor.de>
+# Date 1778236075 0
+# Node ID e78832dd02a9bfb96c1e59769864e6d2295b1b53
+# Parent  68c365ab77b152897f84fa8816f318a72a88c439
+Bug 1649402 - Fix thread resorting on new messages for Received sort and sort_threads_by_root. r=mkmelin
+
+
+When a new message header is added to a threaded db view, its parent thread
+should be moved to the correct position if the view is sorted by date/received
+and the incoming message is the newest in that thread.
+
+Previously, this automatic re-sorting mechanism was only enabled when sorting
+by "Date" (nsMsgViewSortType::byDate). As a result, users sorting by "Received"
+would see new messages appear within a thread, but the thread itself would not
+bump to the top of the message list until the view was manually refreshed.
+
+Additionally, the live-update logic previously ignored the hidden preference
+`mailnews.sort_threads_by_root` (introduced in Bug 495946). If a user set this
+preference to keep threads anchored chronologically by their oldest root message,
+incoming replies would still incorrectly force the thread to jump to the top.
+
+This patch extends the sorting check in `nsMsgThreadedDBView::OnNewHeader`
+to include `nsMsgViewSortType::byReceived`. It also adds a check for
+`!mSortThreadsByRoot` to both `nsMsgThreadedDBView` and `nsMsgSearchDBView`
+(unified folders), ensuring that live-updates respect the user's thread sorting
+preferences across all folder types.
+
+Differential Revision: https://phabricator.services.mozilla.com/D299224
+
+diff --git a/mailnews/base/src/nsMsgSearchDBView.cpp b/mailnews/base/src/nsMsgSearchDBView.cpp
+--- a/mailnews/base/src/nsMsgSearchDBView.cpp
++++ b/mailnews/base/src/nsMsgSearchDBView.cpp
+@@ -458,18 +458,19 @@ nsresult nsMsgSearchDBView::AddHdrFromFo
+         // Not really OK, but not failure exactly.
+         return NS_OK;
+       }
+ 
+       NS_ASSERTION(!m_levels[threadIndex],
+                    "threadRoot incorrect, or level incorrect");
+ 
+       bool moveThread = false;
+-      if (m_sortType == nsMsgViewSortType::byDate ||
+-          m_sortType == nsMsgViewSortType::byReceived) {
++      if ((m_sortType == nsMsgViewSortType::byDate ||
++           m_sortType == nsMsgViewSortType::byReceived) &&
++          !mSortThreadsByRoot) {
+         uint32_t newestMsgInThread = 0, msgDate = 0;
+         viewThread->GetNewestMsgDate(&newestMsgInThread);
+         msgHdr->GetDateInSeconds(&msgDate);
+         moveThread = (msgDate == newestMsgInThread);
+       }
+ 
+       OrExtraFlag(threadIndex,
+                   MSG_VIEW_FLAG_HASCHILDREN | MSG_VIEW_FLAG_ISTHREAD);
+diff --git a/mailnews/base/src/nsMsgThreadedDBView.cpp b/mailnews/base/src/nsMsgThreadedDBView.cpp
+--- a/mailnews/base/src/nsMsgThreadedDBView.cpp
++++ b/mailnews/base/src/nsMsgThreadedDBView.cpp
+@@ -529,17 +529,20 @@ nsresult nsMsgThreadedDBView::OnNewHeade
+   if (threadIndex == nsMsgViewIndex_None) {
+     if (threadHdr) {
+       AddMsgToThreadNotInView(threadHdr, newHdr, ensureListed);
+     }
+     return NS_OK;
+   }
+ 
+   bool moveThread = false;
+-  if (threadHdr && m_sortType == nsMsgViewSortType::byDate) {
++  if (threadHdr &&
++      (m_sortType == nsMsgViewSortType::byDate ||
++       m_sortType == nsMsgViewSortType::byReceived) &&
++      !mSortThreadsByRoot) {
+     uint32_t newestMsgInThread = 0, msgDate = 0;
+     threadHdr->GetNewestMsgDate(&newestMsgInThread);
+     newHdr->GetDateInSeconds(&msgDate);
+     moveThread = (msgDate == newestMsgInThread);
+   }
+ 
+   uint32_t flags = m_flags[threadIndex];
+   if (!(flags & MSG_VIEW_FLAG_HASCHILDREN)) {
+
