@@ -176,6 +176,11 @@ bugs/2029007-quote-html-pre.patch ## in TB 151
 bugs/671497-threading-issues-part1.patch ## in TB 152
 bugs/671497-threading-issues-part2.patch ## in TB 152
 bugs/1913385-phantom-twisties-xf-deletion.patch ## in TB 152
+bugs/2018473-fix-ENVID.patch ## in TB 150
+cherrypicks/1843860-avoid-multipart-mixed-around-multipart-signed.patch ## in TB 152
+bugs/518629-trashcan-icon-imap.patch ## in TB 152
+bugs/1953623-fix-notifications-for-junk.patch ## in TB 152
+bugs/2009620-empty-recent-favourites.patch ## in TB 151, fixed differently.
 ## Features
 features/01-feature-activity-manager-in-tab.patch
 features/02-feature-Windows-systray-tooltip.patch
@@ -315,6 +320,8 @@ features/feature-1967725-dark-reader-switch-compose.patch
 features/36-feature-web-search-compose.patch
 features/37-feature-sendInBackground-DelayMinutes.patch
 features/38-feature-event-open-message-in-folder.patch
+features/39-feature-cloud-icon-carddav.patch
+features/feature-923043-headers-punycode-ace.patch
 ## Bugs not presented upstream
 bugs/NNN1-browser-remoteness.patch
 bugs/NNN2-handle-empty-content-tabs.patch
@@ -336,6 +343,7 @@ bugs/NNN29-catch-all-forward.patch
 bugs/NNN30-prepend-re-on-reply-drag-to-compose.patch
 bugs/NNN31-dont-delete-non-zero-download-activity.patch
 bugs/NNN32-run-after-junk-filter-on-imap.patch
+bugs/NNN34-reset-sort-order-for-all-folders.patch
 ## Upstream Thunderbird has not taken
 bugs/799040-fix-unread-in-ignored-thread.patch ## TB fixed via bug 448876, "repair" option left here.
 bugs/1870817-blank-pane-virtual-folder.patch ## additional fix to TB's fix for the bug
@@ -360,17 +368,9 @@ bugs/971085-filename-saving-via-drag-drop.patch
 bugs/1945062-IMAP-status-update.patch
 bugs/1917465-fix-scroll-startup.patch ## TB solution didn't cut it: https://bugzilla.mozilla.org/show_bug.cgi?id=1917465#c21
 bugs/1841411-restore-mail-tabs.patch
-bugs/1890253-make-DiscardNewMessage-truncate-mbox-new.patch
+bugs/1890253-make-DiscardNewMessage-truncate-mbox-new.patch ## fixed differently in TB 151
 bugs/1980005-log-differences-in-round-tripped-vcard-data.patch
 bugs/1852171-mail-folderpane-sumSubfolders.patch
 bugs/2005871-embedded-svg-display.patch
-bugs/2009620-empty-recent-favourites.patch
-bugs/2018473-fix-ENVID.patch ## in TB 150
 bugs/2006630-fix-gitmodules.patch
-features/39-feature-cloud-icon-carddav.patch
-cherrypicks/1843860-avoid-multipart-mixed-around-multipart-signed.patch ## in TB 152
-features/feature-923043-headers-punycode-ace.patch
-bugs/518629-trashcan-icon-imap.patch ## in TB 152
-bugs/1953623-fix-notifications-for-junk.patch ## in TB 152
-bugs/NNN34-reset-sort-order-for-all-folders.patch
 features/feature-604033-collapsed-thread-shows-most-recent.patch
